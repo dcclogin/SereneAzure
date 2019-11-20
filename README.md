@@ -1,2 +1,2 @@
 # darkswords
-intuitions, naive codes, coarse but interesting ideas
+intuitions, naive codes, coarse but interesting ideas.
