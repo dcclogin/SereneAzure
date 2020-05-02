@@ -11,3 +11,9 @@
 ## untyped-lambda-typed/racket.rkt
 
 - It's a interpreter of Call-By-Name λ-Calculus written with #lang typed/racket.
+
+## Others
+
+1. `pmatch.scm`：a simple pattern matcher of Scheme.
+2. `encoding.scm`: some primitives encoded by λ terms.
+3. `lambda-n-yin.ss`: CBN λ-Calculus taken from yinwang.
