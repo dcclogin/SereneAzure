@@ -10,7 +10,7 @@
 
 ## untyped-lambda-typed/racket.rkt
 
-- It's an interpreter of Call-By-Name λ-Calculus written with #lang typed/racket.
+- It's an interpreter of Call-By-Name λ-Calculus written with `#lang typed/racket`.
 
 ## Others
 
