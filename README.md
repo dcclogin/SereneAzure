@@ -5,6 +5,7 @@
 ## interp-machine.rkt
 
 - It's a simple C-style interpreter of λ-Calculus with some primitives.
+- interpreter -> CPSed -> registerized -> trampolined.
 - In some way, it's like an abstract machine (like CEK machine).
 
 ## untyped-lambda-typed/racket.rkt
