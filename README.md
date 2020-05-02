@@ -14,6 +14,6 @@
 
 ## Others
 
-1. `pmatch.scm`：a simple pattern matcher of Scheme.
-2. `encoding.scm`: some primitives encoded by λ terms.
-3. `lambda-n-yin.ss`: CBN λ-Calculus taken from yinwang.
+1. `pmatch.scm` ：a simple pattern matcher of Scheme.
+2. `encoding.scm` : some primitives encoded by λ terms.
+3. `lambda-n-yin.ss` : CBN λ-Calculus taken from yinwang.
