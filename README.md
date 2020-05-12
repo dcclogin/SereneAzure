@@ -20,9 +20,9 @@
 
 - Have fun with abstract machines!
 
-## untyped-lambda-typed/racket.rkt
+## UTLC.rkt
 
-- It's an interpreter of Call-By-Name λ-Calculus (standard reduction) with `#lang typed/racket`.
+- Untyped λ-Calculus (standard reduction) with `#lang typed/racket`.
 
 ## Others
 
