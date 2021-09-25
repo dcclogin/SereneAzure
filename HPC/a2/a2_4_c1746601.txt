@@ -1,0 +1,61 @@
+Thread 0 : 2923 us
+x[404] = -31.5289
+Thread 0 : 1633 us
+Thread 1 : 1656 us
+x[404] = -31.5289
+Thread 0 : 875 us
+Thread 1 : 981 us
+Thread 3 : 998 us
+Thread 2 : 1001 us
+x[404] = -31.5289
+Thread 7 : 458 us
+Thread 1 : 493 us
+Thread 6 : 463 us
+Thread 5 : 473 us
+Thread 0 : 484 us
+Thread 4 : 484 us
+Thread 3 : 532 us
+Thread 2 : 535 us
+x[404] = -31.5289
+Thread 11 : 272 us
+Thread 10 : 299 us
+Thread 9 : 309 us
+Thread 8 : 330 us
+Thread 7 : 348 us
+Thread 6 : 364 us
+Thread 5 : 377 us
+Thread 4 : 378 us
+Thread 12 : 399 us
+Thread 3 : 523 us
+Thread 14 : 554 us
+Thread 13 : 571 us
+Thread 15 : 596 us
+Thread 0 : 606 us
+Thread 2 : 608 us
+Thread 1 : 613 us
+x[404] = -31.5289
+Thread 11 : 333 us
+Thread 1 : 345 us
+Thread 14 : 380 us
+Thread 19 : 416 us
+Thread 3 : 430 us
+Thread 10 : 435 us
+Thread 2 : 431 us
+Thread 8 : 441 us
+Thread 9 : 442 us
+Thread 12 : 445 us
+Thread 13 : 447 us
+Thread 0 : 463 us
+Thread 23 : 474 us
+Thread 15 : 475 us
+Thread 17 : 476 us
+Thread 4 : 481 us
+Thread 16 : 484 us
+Thread 7 : 486 us
+Thread 20 : 486 us
+Thread 22 : 487 us
+Thread 6 : 488 us
+Thread 18 : 494 us
+Thread 5 : 494 us
+Thread 21 : 496 us
+x[404] = -31.5289

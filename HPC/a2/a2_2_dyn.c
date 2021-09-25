@@ -19,7 +19,7 @@ int main(int argc, char const *argv[])
     {
         threadid = omp_get_thread_num();
 
-        #pragma omp for schedule(static, chunk)
+        #pragma omp for schedule(dynamic, chunk)
         for (i = 0; i < N; i++) {
             result[i] = a[i] + b[i];
             printf("Thread id: %d working on index %d\n", threadid, i);

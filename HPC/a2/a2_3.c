@@ -26,7 +26,7 @@ int main(int argc, char const *argv[])
                     if (x[i] > max_x) {
                         max_x = x[i];
                     }
-                    if (x[i] < mix_x) {
+                    if (x[i] < min_x) {
                         min_x = x[i];
                     }
                 }
