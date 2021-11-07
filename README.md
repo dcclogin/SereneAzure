@@ -18,3 +18,7 @@
 ## expose-basic-block.rkt
 - One of the most interesting compiler pass from P523.
 
+## reify.rkt
+- Simple implementation of Normalization by Evaluation.
+- Similar to Olivier Danvy's Type Directed Partial Evaluation.
+
