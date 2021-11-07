@@ -15,6 +15,9 @@
 - Untyped λ-Calculus (standard reduction) written in `#lang typed/racket`.
 - Call-By-Name with old fashin substitution.
 
+## cc.rkt
+- A naive implementation of CC Machine described in PLLC.
+
 ## expose-basic-block.rkt
 - One of the most interesting compiler pass from P523.
 
