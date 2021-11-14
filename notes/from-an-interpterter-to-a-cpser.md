@@ -185,9 +185,8 @@ The basic idea is to defer the evaluation a little ... turn a dynamic process in
   (! exp id))
 ```
 
-Try fill the `TODO` part of the ANFer code.
-
-----------------------
+Exercise: 
+- Try fill the `TODO` part of the ANFer code.
 
 ## CPSer
 
@@ -256,7 +255,7 @@ Moreover, primitives like `+` and `*` should not be CPSed since they are not "se
                  (lambda (v2)
                    (let ([v (gensym 'v)])          ;; <= new name v
                      `(,v1 ,v2 (lambda (,v)        ;; <= construct CPSed call via quasi`
-                       ,(C v))))))))]              ;; <= fill in v via unquote,
+                        ,(C v))))))))]             ;; <= fill in v via unquote,
         [`(,op ,e1 ,e2)
          (! e1
             (lambda (v1)
