@@ -268,9 +268,12 @@ Moreover, primitives like `+` and `*` should not be CPSed since they are not "se
   (! exp id))
 ```
 
+This is really beautiful because we just wrote a CPSer using CPS!
+
+
 Exercise:
 - Try fill the `TODO` part of CPSer.
-- Try tail call optimization (Hint: compare the context C with idk).
+- Try tail call optimization (Hint: compare the context `C` with `idk`).
 
 ----------------------
 
