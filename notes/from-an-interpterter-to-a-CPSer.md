@@ -1,3 +1,8 @@
+## From an interpreter to a CPSer
+
+by Chenchao Ding, 2021
+
+
 Recall that:
 - An interpreter is a program that takes an **expression** as input, and gets its **meaning** as output, by **evaluation**.
 - An CPSer is a program that takes an **expression** as input, and get its **CPSed form** as output, by **correctness preserving transformation**.
