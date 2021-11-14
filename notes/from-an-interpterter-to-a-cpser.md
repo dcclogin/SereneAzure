@@ -154,8 +154,9 @@ Here are the differences:
 - ANF doesn't discriminate between `Number` and `Symbol`, it won't try to **evaluate** variables (i.e. lookup in the `env`).
 - we no longer need `env`, `mt-env` and `ext-env`, since they're only for **evaluation** of variables, but ANFer never evaluates a name.
 - we don't care what `e1` really is, so we no longer need definition of closure and that pattern matching line.
+- we are entering a "new world" when ANFing the body `b` of `(lambda (,x) ,b)`, thus a fresh id context is needed.
 
-The basic idea is to defer the evaluation a little ... turn a dynamic process into a static expression (using quotation & quasiqutation). it's the philosophical aspect of programming between "dynamic" and "static"...:)
+The very basic idea is to defer the evaluation a little ... turn a dynamic process into a static expression (using quotation & quasiqutation). It's the philosophical side of programming with notions like "dynamic" and "static"...:)
 
 ```racket
 (define (anf exp)
@@ -187,6 +188,7 @@ The basic idea is to defer the evaluation a little ... turn a dynamic process in
 
 Exercise: 
 - Try fill the `TODO` part of the ANFer code.
+- What if we name each `lambda`? Modify the code.
 
 ## CPSer
 
@@ -207,14 +209,14 @@ Motivation: what do you think is the difference  between these two expressions?
                          (k v2))))))))
 ```
 
-They are in some way really the same thing! We can simply modify the "construct let-binding" line to make that syntactical change.
+They are in some way really the same thing! We can simply modify the "construct let-binding" part of code.
 
-But transforming into CPS is non-trivial if `lambda` is in consideration. Try manually CPS-transforming the following expression:
+But transforming into CPS is not that trivial if `lambda` is in consideration. Try manually CPS-transforming the following expression:
 
 ```racket
 (lambda (x) ((f x) (g y)))
 ```
-=>
+=> (naively)
 ```racket
 (lambda (x k) 
   (f x (lambda (v0)
@@ -230,12 +232,12 @@ But transforming into CPS is non-trivial if `lambda` is in consideration. Try ma
                 (v0 v1 k)))))))
 ```
 
-We can no longer "enter a new world" with the `id` context, instead we need a slightly modified context:
+We can no longer "enter a new world" with the `id` context, instead we need a slightly modified context `idk`:
 
 ```racket
-(lambda (v) `(k ,v))
+(define idk (lambda (v) `(k ,v)))
 ```
-which means a continuation `k` bound by that lambda is waiting for `v` returned by that "new world".
+which means a continuation `k` bound by the `lambda` (door of the "new world") is waiting for `v` returned by the "new world".
 
 Moreover, primitives like `+` and `*` should not be CPSed since they are not "serious function calls".
 
@@ -275,5 +277,5 @@ Exercise:
 ----------------------
 
 Brainteasers:
-- Could we write a program `anf-to-cps` that **automatically** transforms a ANFer to a CPSer? or vice versa?
+- Could we write a program `anf-to-cps` that **automatically** transforms a ANFer to a CPSer? What about `cps-to-anf`?
 - Could we write a program `t` that **automatically** transforms an interpreter to a "corresponding" ANFer or CPSer?
