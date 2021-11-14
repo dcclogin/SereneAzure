@@ -18,17 +18,18 @@ First, we should quickly go through the Call-By-Value interpreter of lambda calc
 > under construction (a interpreter written in Racket)
 
 ```racket
-(define env0 '())
+(define mt-env '())
 (define ext-env
   (lambda (x v env)
-    (cons `(,x . ,v) env)))
+    `((,x . ,v) . ,env)))
 (define lookup
   (lambda (x env)
-    (let ([p (assq x env)])
+    (let ([p (assv x env)])
       (cond
        [(not p) #f]
        [else (cdr p)]))))
        
+;; for simplicity, use struct for closure      
 (struct Closure (f env))
 
 (define interp
