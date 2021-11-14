@@ -164,7 +164,7 @@ Now the similarity between a CPSed interpreter and an ANFer has been revealed, w
         [(? symbol? x) (C x)]      
         [(? number? x) (C x)]
         [`(lambda (,x) ,e)
-         (C `(lambda (,x) ,(! e id)))]
+         (C `(lambda (,x) ,(! e id)))]          ;; <= enter a "new world" via id context 
         [`(,e1 ,e2)
          (! e1
             (lambda (v1)
@@ -205,5 +205,6 @@ Try fill the `TODO` part of the ANFer code.
 
 ----------------------
 
-Brainteaser:
-> Could we write a program `t` that **automatically** transform an interpreter to a "corresponding" ANFer or CPSer?
+Brainteasers:
+- Could we write a program `anf-to-cps` that **automatically** transforms a ANFer to a CPSer?
+- Could we write a program `t` that **automatically** transforms an interpreter to a "corresponding" ANFer or CPSer?
