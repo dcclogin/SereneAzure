@@ -105,8 +105,6 @@ This kind of perspective can be better illustrated in a CPSed interpreter, since
 
 Now focus on that `v`, which can be read as "the already evaluated value from `(,e1 ,e2)`". It's the right thing to fill in the "hole".
 
---------------------
-
 ## ANFer
 
 Similarly, what is happening when the ANFer meets the same expression `(+ (* 2 3) (+ 4 2))`?
