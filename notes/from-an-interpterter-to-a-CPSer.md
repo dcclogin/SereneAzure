@@ -1,4 +1,4 @@
-## From an interpreter to a CPSer
+## From an Interpreter to a CPSer
 
 by Chenchao Ding, 2021
 
@@ -9,12 +9,9 @@ Recall that:
 
 Somehow you may have an intuitive thought: could we derive a CPSer from an interpreter, given the language (grammar)?
 
-This is a tutorial note that shows you how to **manually** perform such a derivation, or say, a transformation!
+This is a tutorial note that shows you how to **manually** perform such a derivation, or say, a transformation! We first show how to quickly get an ANFer from an interpreter, then from ANFer to CPSer. It's like a "two-pass" derivation.
 
-
-We show how to quickly get an ANFer from an interpreter, then from ANFer to CPSer. It's like a "two-pass" derivation.
-
-
+### Interpreter
 
 First, we should quickly go through the Call-By-Value interpreter of lambda calculus with some primitives:
 
