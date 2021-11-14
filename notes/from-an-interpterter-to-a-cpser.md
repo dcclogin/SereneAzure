@@ -280,3 +280,13 @@ Exercise:
 Brainteasers:
 - Could we write a program `anf-to-cps` that **automatically** transforms a ANFer to a CPSer? What about `cps-to-anf`?
 - Could we write a program `t` that **automatically** transforms an interpreter to a "corresponding" ANFer or CPSer?
+
+-----------------------
+
+## Related Work
+
+Olivier Danvy shows a one-pass transformation into monadic normal form (ANF) in [1], which is very similar to my ANFer. Interesting reader can add booleans and conditionals to the language. I also wrote 2 passes from P523 compiler course using similar techniques shown here, namely `explicate-control` and `remove-complex-opera*`, you can find them in [here] and [here].
+
+## References
+> underconstruction
+[1] 
