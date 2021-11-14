@@ -182,7 +182,7 @@ The basic idea is to defer the evaluation a little ... turn a dynamic process in
                    ;;TODO 
                    1))))])))
   (define id (lambda (v) v))
-  (! exp mt-env))
+  (! exp id))
 ```
 
 Try fill the `TODO` part of the ANFer code.
@@ -265,7 +265,8 @@ Moreover, primitives like `+` and `*` should not be CPSed since they are not "se
                    ;;TODO 
                    1))))])))
   (define idk (lambda (v) `(k ,v)))
-  (! exp mt-env))
+  (define id (lambda (v) v))
+  (! exp id))
 ```
 
 Exercise:
