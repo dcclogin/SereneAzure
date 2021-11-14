@@ -217,8 +217,28 @@ But transforming into CPS is non-trivial if `lambda` is in consideration. Try ma
 ```racket
 (lambda (x) ((f x) (g y)))
 ```
+=>
+```racket
+(lambda (x k) 
+  (f x (lambda (v0)
+         (g y (lambda (v1)
+                (v0 v1 (lambda (v2)
+                         (k v2))))))))
+```
+=> optimized tail call
+```racket
+(lambda (x k) 
+  (f x (lambda (v0)
+         (g y (lambda (v1)
+                (v0 v1 k)))))))
+```
 
-> underconstruction
+We can no longer "enter a new world" with the same context, instead we need a slightly modified context:
+
+```racket
+(lambda (v) `(k ,v))
+```
+
 
 
 ----------------------
