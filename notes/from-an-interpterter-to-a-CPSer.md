@@ -17,6 +17,41 @@ First, we should quickly go through the Call-By-Value interpreter of lambda calc
 
 > under construction (a interpreter written in Racket)
 
+```racket
+(define env0 '())
+(define ext-env
+  (lambda (x v env)
+    (cons `(,x . ,v) env)))
+(define lookup
+  (lambda (x env)
+    (let ([p (assq x env)])
+      (cond
+       [(not p) #f]
+       [else (cdr p)]))))
+       
+(struct Closure (f env))
+
+(define interp
+  (lambda (exp env)
+    (match exp
+      [(? symbol? x) (lookup x env)]      
+      [(? number? x) x]
+      [`(lambda (,x) ,e)
+       (Closure exp env)]
+      [`(,e1 ,e2)
+       (let ([v1 (interp e1 env)]
+             [v2 (interp e2 env)])
+         (match v1
+           [(Closure `(lambda (,x) ,e) env-save)
+            (interp e (ext-env x v2 env-save))]))]
+      [`(,op ,e1 ,e2)
+       (let ([v1 (interp e1 env)]
+             [v2 (interp e2 env)])
+         (match op
+           ['+ (+ v1 v2)]
+           ['* (* v1 v2)]))])))
+```
+
 Try reasoning in your mind what is happening when the interpreter recursively handles expression like `(+ (* 2 3) (- 4 2))`:
 
 > under construction
