@@ -213,5 +213,5 @@ Motivation: what do you think is the difference  between these two expressions?
 ----------------------
 
 Brainteasers:
-- Could we write a program `anf-to-cps` that **automatically** transforms a ANFer to a CPSer?
+- Could we write a program `anf-to-cps` that **automatically** transforms a ANFer to a CPSer? or vice versa?
 - Could we write a program `t` that **automatically** transforms an interpreter to a "corresponding" ANFer or CPSer?
