@@ -119,9 +119,11 @@ Similarly, what is happening when the ANFer meets the same expression `(+ (* 2 3
 
 You can think as if the ANF transformation "defers" the evaluation to some later steps, or passes, pretty much like a compiler's job. In fact, ANF is an important compiler pass that exposes the "intra-expression" control flow and unnests the complex expressions.
 
+Now the similarity between a CPSed interpreter and an ANFer has been revealed, we can write down the skeleton code for ANFer:
+
 ```racket
 (define !
-    (lambda (exp env C)
+    (lambda (exp C)       ;; <= C is the evaluation context
       (match exp
         [(? symbol? x) (C x)]      
         [(? number? x) (C x)]
@@ -146,7 +148,10 @@ You can think as if the ANF transformation "defers" the evaluation to some later
                    ))))])))
 ```
 
-ANF doesn't discriminate between `Number` and `Symbol`, it won't try to **evaluate** variables (i.e. lookup in the `env`).
+- ANF doesn't discriminate between `Number` and `Symbol`, it won't try to **evaluate** variables (i.e. lookup in the `env`).
+- we don't need `env` anymore, since it is only for **evaluation** of variables, but ANFer doesn't evaluate a name.
+- the basic idea is to defer the evaluation a little ... turn a dynamic process into a static expression (using quotation & quasiqutation).
+- the philosophical aspect of programming between "dynamic" and "static"...
 
 ----------------------
 
