@@ -13,7 +13,7 @@
 
 ## UTLC.rkt
 - Untyped λ-Calculus (standard reduction) written in `#lang typed/racket`.
-- Call-By-Name with old fashin substitution.
+- Call-By-Name with old fashion substitution.
 
 ## cc.rkt
 - A naive implementation of CC Machine described in PLLC.
@@ -24,4 +24,7 @@
 ## reify.rkt
 - Simple implementation of Normalization by Evaluation.
 - Similar to Olivier Danvy's Type Directed Partial Evaluation.
+
+## notes
+Some tutorial notes you may find interesting.
 
