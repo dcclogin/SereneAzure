@@ -5,9 +5,10 @@ by Chenchao Ding, 2021
 
 Recall that:
 - An interpreter is a program that takes an **expression** as input, and gets its **meaning** as output, by **evaluation**.
+- An ANFer is a program that takes an **expression** as input, and get its **A-Normal Form** as output, by **correctness preserving transformation**.
 - An CPSer is a program that takes an **expression** as input, and get its **CPSed form** as output, by **correctness preserving transformation**.
 
-Somehow you may have an intuitive thought: could we derive a CPSer from an interpreter, given the language (grammar)?
+Somehow you may have an intuitive thought: could we derive a ANFer/CPSer from an interpreter, given the language (grammar, or patterns matched)?
 
 This is a tutorial note that shows you how to **manually** perform such a derivation, or say, a transformation! We first show how to quickly get an ANFer from an interpreter, then from ANFer to CPSer. It's like a "two-pass" derivation.
 
@@ -53,26 +54,36 @@ First, we should quickly go through the Call-By-Value interpreter of lambda calc
   (! exp mt-env))
 ```
 
-Try reasoning in your mind what is happening when the interpreter recursively handles expression like `(+ (* 2 3) (- 4 2))`:
+Try reasoning in your mind what is happening when the interpreter recursively handles expression like `(+ (* 2 3) (+ 4 2))`:
 
-> under construction
+- there is a evaluation context, `(+ [ ] (+ 4 2))`, where `[ ]` is a "hole" waiting for something to fill in.
+- there is a control expression, i.e. `(* 2 3)`, which gets reduced/evaluated to `6`, then **gives back** the result to the "hole".
 
-It **evaluates** the left-most redex `(* 2 3)`, and then **gives back** the result `6`, thus performing a reduction.
-This kind of perspective can be better illustrated in a CPSed interpreter, since the continuation literally does the **giving back** job:
+This kind of perspective can be better illustrated in a CPSed interpreter, since a evaluation context is essentially a continuation:
 
 > under construction (a CPSed interpreter in Racket)
 
+Now focus on that `v`, which can be read as "the already evaluated value from `(,e1 ,e2)`". It's the right thing to fill in the "hole".
 
 
-Similarly, what is happening when the ANFer meets the same expression `(+ (* 2 3) (- 4 2))`?
 
-> under construction
+--------------------
 
-It **gives a name** to the left-most redex `(* 2 3)`, and then **gives back** the name, a similar "reduction".
+Similarly, what is happening when the ANFer meets the same expression `(+ (* 2 3) (+ 4 2))`?
 
-You can think as if the ANF transformation "defers" the evaluation to some later steps, or passes, pretty much like a compiler's job.
-In fact, ANF is an important compiler pass that exposes the "intra-expression" control flow and unnests the complex expressions.
+- there is also a context `(+ [ ] (+ 4 2))`, where `[ ]` is a "hole" waiting for something to fill in.
+- there is also a control expression, `(* 2 3)`, which is given a name `v.0` to refer to it later, then **gives back** the name to the "hole".
 
+```racket
+`(let ([v.0 (* 2 3)])
+   ,(anf `(+ v.0 (* 2 3))))
+```
+
+You can think as if the ANF transformation "defers" the evaluation to some later steps, or passes, pretty much like a compiler's job. In fact, ANF is an important compiler pass that exposes the "intra-expression" control flow and unnests the complex expressions.
+
+ANF doesn't discriminate between `Number` and `Symbol`, it won't try to **evaluate** variables (i.e. lookup in the `env`).
+
+----------------------
 
 
 Could we write a program `t` that **automatically** transform an interpreter to a "corresponding" CPSer?
