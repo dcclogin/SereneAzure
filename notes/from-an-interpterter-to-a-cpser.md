@@ -1,4 +1,4 @@
-## From an Interpreter to a CPSer
+# From an Interpreter to a CPSer
 
 by Chenchao Ding, 2021
 
@@ -12,7 +12,7 @@ Somehow you may have an intuitive thought: could we derive a ANFer/CPSer from an
 
 This is a tutorial note that shows you how to **manually** perform such a derivation, or say, a transformation! We first show how to quickly get an ANFer from an interpreter, then from ANFer to CPSer. It's like a "two-pass" derivation.
 
-### Interpreter
+## Interpreter
 
 First, we should quickly go through the Call-By-Value interpreter of lambda calculus with some primitives:
 
@@ -105,7 +105,7 @@ Now focus on that `v`, which can be read as "the already evaluated value from `(
 
 --------------------
 
-### ANFer
+## ANFer
 
 Similarly, what is happening when the ANFer meets the same expression `(+ (* 2 3) (+ 4 2))`?
 
@@ -198,7 +198,7 @@ Try fill the `TODO` part of the ANFer code.
 
 ----------------------
 
-### CPSer
+## CPSer
 
 > underconstruction
 
