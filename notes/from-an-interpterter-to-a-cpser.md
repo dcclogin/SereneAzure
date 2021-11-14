@@ -16,8 +16,6 @@ This is a tutorial note that shows you how to **manually** perform such a deriva
 
 First, we should quickly go through the Call-By-Value interpreter of lambda calculus with some primitives:
 
-> under construction (a interpreter written in Racket)
-
 ```racket
 (define (interp exp)     
   ;; for simplicity, use struct for closure      
@@ -73,7 +71,7 @@ This kind of perspective can be better illustrated in a CPSed interpreter, since
         [`(lambda (,x) ,e) (C (Closure exp env))]
         [`(,e1 ,e2)
          (! e1
-            (lambda (v1)        ;; <= evaluated to fill the "hole"
+            (lambda (v1)        ;; <= it's a "value" to fill the "hole"
               (! e2
                  (lambda (v2)
                    (match v1
@@ -107,6 +105,8 @@ Now focus on that `v`, which can be read as "the already evaluated value from `(
 
 --------------------
 
+### ANFer
+
 Similarly, what is happening when the ANFer meets the same expression `(+ (* 2 3) (+ 4 2))`?
 
 - there is also a context `(+ [ ] (+ 4 2))`, where `[ ]` is a "hole" waiting for something to fill in.
@@ -123,7 +123,7 @@ Now the similarity between a CPSed interpreter and an ANFer has been revealed, w
 
 ```racket
 (define !
-    (lambda (exp C)       ;; <= C is the evaluation context
+    (lambda (exp C)           ;; <= C is the evaluation context
       (match exp
         [(? symbol? x) (C x)]      
         [(? number? x) (C x)]
@@ -132,10 +132,10 @@ Now the similarity between a CPSed interpreter and an ANFer has been revealed, w
          ]
         [`(,e1 ,e2)
          (! e1
-            (lambda (v1)      ;; <= now it's a name
+            (lambda (v1)      ;; <= now it's a name (instead of a value)
               (! e2
                  (lambda (v2)
-                   ...        ;; <= generate a new name for (v1 v2)
+                   ...        ;; <= generate a new name for `(,v1 ,v2)
                    ...        ;; <= construct a let-binding
                    ...        ;; <= fill the hole with the new name
                    ))))]
@@ -144,7 +144,7 @@ Now the similarity between a CPSed interpreter and an ANFer has been revealed, w
             (lambda (v1)
               (! e2
                  (lambda (v2)
-                   ...        ;; <= similar ... 
+                   ...        ;; <= similarly, ... 
                    ))))])))
 ```
 
@@ -153,7 +153,57 @@ Now the similarity between a CPSed interpreter and an ANFer has been revealed, w
 - the basic idea is to defer the evaluation a little ... turn a dynamic process into a static expression (using quotation & quasiqutation).
 - the philosophical aspect of programming between "dynamic" and "static"...
 
+
+```racket
+(define (interp exp)     
+  ;; for simplicity, use struct for closure      
+  (struct Closure (f env))
+  (define !
+    (lambda (exp env C)
+      (match exp
+        [(? symbol? x) (C x)]      
+        [(? number? x) (C x)]
+        [`(lambda (,x) ,e)
+         (C `(lambda (,x) ,(! e id)))]
+        [`(,e1 ,e2)
+         (! e1
+            (lambda (v1)
+              (! e2
+                 (lambda (v2)
+                   (let ([v (gensym 'v)])       ;; <= new name v
+                     `(let ([,v (,v1 ,v2)])     ;; <= let-binding via quasi`
+                        ,(C v)))))))]           ;; <= fill in v via unquote,
+        [`(,op ,e1 ,e2)
+         (! e1
+            (lambda (v1)
+              (! e2
+                 (lambda (v2)
+                   ;;TODO 
+                   1))))])))
+  (define mt-env '())
+  (define ext-env
+    (lambda (x v env)
+      `((,x . ,v) . ,env)))
+  (define lookup
+    (lambda (x env)
+      (let ([p (assv x env)])
+        (cond
+          [(not p) #f]
+          [else (cdr p)]))))
+  (define id (lambda (v) v))
+  (! exp mt-env))
+```
+
+Try fill the `TODO` part of the ANFer code.
+
 ----------------------
 
+### CPSer
 
-Could we write a program `t` that **automatically** transform an interpreter to a "corresponding" CPSer?
+> underconstruction
+
+
+----------------------
+
+Brainteaser:
+> Could we write a program `t` that **automatically** transform an interpreter to a "corresponding" ANFer or CPSer?
