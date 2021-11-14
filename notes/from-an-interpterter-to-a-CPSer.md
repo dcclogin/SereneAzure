@@ -18,39 +18,39 @@ First, we should quickly go through the Call-By-Value interpreter of lambda calc
 > under construction (a interpreter written in Racket)
 
 ```racket
-(define mt-env '())
-(define ext-env
-  (lambda (x v env)
-    `((,x . ,v) . ,env)))
-(define lookup
-  (lambda (x env)
-    (let ([p (assv x env)])
-      (cond
-       [(not p) #f]
-       [else (cdr p)]))))
-       
-;; for simplicity, use struct for closure      
-(struct Closure (f env))
-
-(define interp
-  (lambda (exp env)
-    (match exp
-      [(? symbol? x) (lookup x env)]      
-      [(? number? x) x]
-      [`(lambda (,x) ,e)
-       (Closure exp env)]
-      [`(,e1 ,e2)
-       (let ([v1 (interp e1 env)]
-             [v2 (interp e2 env)])
-         (match v1
-           [(Closure `(lambda (,x) ,e) env-save)
-            (interp e (ext-env x v2 env-save))]))]
-      [`(,op ,e1 ,e2)
-       (let ([v1 (interp e1 env)]
-             [v2 (interp e2 env)])
-         (match op
-           ['+ (+ v1 v2)]
-           ['* (* v1 v2)]))])))
+(define (interp exp)     
+  ;; for simplicity, use struct for closure      
+  (struct Closure (f env))
+  (define !
+    (lambda (exp env)
+      (match exp
+        [(? symbol? x) (lookup x env)]      
+        [(? number? x) x]
+        [`(lambda (,x) ,e)
+         (Closure exp env)]
+        [`(,e1 ,e2)
+         (let ([v1 (! e1 env)]
+               [v2 (! e2 env)])
+           (match v1
+             [(Closure `(lambda (,x) ,e) env-save)
+              (! e (ext-env x v2 env-save))]))]
+        [`(,op ,e1 ,e2)
+         (let ([v1 (! e1 env)]
+               [v2 (! e2 env)])
+           (match op
+             ['+ (+ v1 v2)]
+             ['* (* v1 v2)]))])))
+  (define mt-env '())
+  (define ext-env
+    (lambda (x v env)
+      `((,x . ,v) . ,env)))
+  (define lookup
+    (lambda (x env)
+      (let ([p (assv x env)])
+        (cond
+          [(not p) #f]
+          [else (cdr p)]))))
+  (! exp mt-env))
 ```
 
 Try reasoning in your mind what is happening when the interpreter recursively handles expression like `(+ (* 2 3) (- 4 2))`:
