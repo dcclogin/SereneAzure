@@ -1,5 +1,8 @@
-## cpser.rkt
-- CPS, Reversed CPS, ANF, the flatten pass of compiler building and so on.
+## CPSer.rkt
+- Transforming a program into CPS.
+
+## ANFer.rkt
+- Transforming a program into A-Normal Form.
 
 ## interp-k0.rkt
 - A simple CPStyle evaluator for a subset of Scheme.
@@ -9,7 +12,7 @@
 
 ## interp-machine.rkt
 - A simple C-style interpreter of λ-Calculus with some primitives.
-- Obtain through : interpreter -> CPSed -> registerized -> trampolined.
+- interpreter -> CPSed -> registerized -> trampolined.
 
 ## UTLC.rkt
 - Untyped λ-Calculus (standard reduction) written in `#lang typed/racket`.
@@ -26,5 +29,7 @@
 - Similar to Olivier Danvy's Type Directed Partial Evaluation.
 
 ## notes
-Some tutorial notes you may find interesting.
+Some tutorial notes you may find interesting:
+- From an Interpreter to a CPSer.
+- ...
 
