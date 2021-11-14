@@ -160,7 +160,7 @@ The basic idea is to defer the evaluation a little ... turn a dynamic process in
 ```racket
 (define (anf exp)
   (define !
-    (lambda (exp env C)
+    (lambda (exp C)
       (match exp
         [(? symbol? x) (C x)]      
         [(? number? x) (C x)]
@@ -243,7 +243,7 @@ Moreover, primitives like `+` and `*` should not be CPSed since they are not "se
 ```racket
 (define (cps exp)     
   (define !
-    (lambda (exp env C)
+    (lambda (exp C)
       (match exp
         [(? symbol? x) (C x)]      
         [(? number? x) (C x)]
