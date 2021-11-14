@@ -54,29 +54,33 @@ First, we should quickly go through the Call-By-Value interpreter of lambda calc
 
 Try reasoning in your mind what is happening when the interpreter recursively handles expression like `(+ (* 2 3) (+ 4 2))`:
 
-- there is a evaluation context, `(+ [ ] (+ 4 2))`, where `[ ]` is a "hole" waiting for something to fill in.
+- there is an evaluation context, `(+ [ ] (+ 4 2))`, where `[ ]` is a "hole" waiting for something to fill in.
 - there is a control expression, i.e. `(* 2 3)`, which gets reduced/evaluated to `6`, then **gives back** the result to the "hole".
 
-This kind of perspective can be better illustrated in a CPSed interpreter, since a evaluation context is essentially a continuation:
+## CPSed interpreter
+
+This kind of perspective can be better illustrated in a CPSed interpreter, since an evaluation context is essentially a continuation:
 
 ```racket
 (define (interp exp)     
   ;; for simplicity, use struct for closure      
   (struct Closure (f env))
   (define !
-    (lambda (exp env C)
+    (lambda (exp env C)                               ;; <= C is the evaluation context
       (match exp
         [(? symbol? x) (C (lookup x env))]      
         [(? number? x) (C x)]
         [`(lambda (,x) ,e) (C (Closure exp env))]
         [`(,e1 ,e2)
          (! e1
-            (lambda (v1)        ;; <= it's a "value" to fill the "hole"
+            (lambda (v1)                              ;; <= it's a "value" to fill the "hole"
               (! e2
                  (lambda (v2)
                    (match v1
                      [(Closure `(lambda (,x) ,e) env-save)
-                      (! e (ext-env x v2 env-save) C)])))))]
+                      (! e (ext-env x v2 env-save)    ;; <= do evaluation
+                        (lambda (v)                   ;; <= focus on this v
+                          (C v)))])))))]              ;; <= fill the hole with the value v carries 
         [`(,op ,e1 ,e2)
          (! e1
             (lambda (v1)
@@ -100,8 +104,6 @@ This kind of perspective can be better illustrated in a CPSed interpreter, since
 ```
 
 Now focus on that `v`, which can be read as "the already evaluated value from `(,e1 ,e2)`". It's the right thing to fill in the "hole".
-
-
 
 --------------------
 
@@ -147,12 +149,13 @@ Now the similarity between a CPSed interpreter and an ANFer has been revealed, w
                    ...        ;; <= similarly, ... 
                    ))))])))
 ```
+Here are the differences:
 
 - ANF doesn't discriminate between `Number` and `Symbol`, it won't try to **evaluate** variables (i.e. lookup in the `env`).
 - we no longer need `env`, `mt-env` and `ext-env`, since they're only for **evaluation** of variables, but ANFer never evaluates a name.
-- the basic idea is to defer the evaluation a little ... turn a dynamic process into a static expression (using quotation & quasiqutation).
-- it's the philosophical aspect of programming between "dynamic" and "static"...
+- we don't care what `e1` really is, so we no longer need that pattern matching line.
 
+The basic idea is to defer the evaluation a little ... turn a dynamic process into a static expression (using quotation & quasiqutation). it's the philosophical aspect of programming between "dynamic" and "static"...:)
 
 ```racket
 (define (interp exp)     
@@ -201,10 +204,18 @@ Motivation: what do you think is the difference  between these two expressions?
 
 ```racket
 (lambda (k)
-(f x (lambda (v0)
-       (g y (lambda (v1)
-              (v0 v1 (lambda (v2)
-                       (k v2))))))))
+  (f x (lambda (v0)
+         (g y (lambda (v1)
+                (v0 v1 (lambda (v2)
+                         (k v2))))))))
+```
+
+They are in some way really the same thing! We can simply modify the "construct let-binding" line to make that syntactical change.
+
+But transforming into CPS is non-trivial if `lambda` is in consideration. Try manually CPS-transforming the following expression:
+
+```racket
+(lambda (x) ((f x) (g y)))
 ```
 
 > underconstruction
