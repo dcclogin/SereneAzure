@@ -61,7 +61,44 @@ Try reasoning in your mind what is happening when the interpreter recursively ha
 
 This kind of perspective can be better illustrated in a CPSed interpreter, since a evaluation context is essentially a continuation:
 
-> under construction (a CPSed interpreter in Racket)
+```racket
+(define (interp exp)     
+  ;; for simplicity, use struct for closure      
+  (struct Closure (f env))
+  (define !
+    (lambda (exp env C)
+      (match exp
+        [(? symbol? x) (C (lookup x env))]      
+        [(? number? x) (C x)]
+        [`(lambda (,x) ,e) (C (Closure exp env))]
+        [`(,e1 ,e2)
+         (! e1
+            (lambda (v1)        ;; <= evaluated to fill the "hole"
+              (! e2
+                 (lambda (v2)
+                   (match v1
+                     [(Closure `(lambda (,x) ,e) env-save)
+                      (! e (ext-env x v2 env-save) C)])))))]
+        [`(,op ,e1 ,e2)
+         (! e1
+            (lambda (v1)
+              (! e2
+                 (lambda (v2)
+                   (match op
+                     ['+ (C (+ v1 v2))]
+                     ['* (C (* v1 v2))])))))])))
+  (define mt-env '())
+  (define ext-env
+    (lambda (x v env)
+      `((,x . ,v) . ,env)))
+  (define lookup
+    (lambda (x env)
+      (let ([p (assv x env)])
+        (cond
+          [(not p) #f]
+          [else (cdr p)]))))
+  (! exp mt-env))
+```
 
 Now focus on that `v`, which can be read as "the already evaluated value from `(,e1 ,e2)`". It's the right thing to fill in the "hole".
 
