@@ -149,9 +149,9 @@ Now the similarity between a CPSed interpreter and an ANFer has been revealed, w
 ```
 
 - ANF doesn't discriminate between `Number` and `Symbol`, it won't try to **evaluate** variables (i.e. lookup in the `env`).
-- we don't need `env` anymore, since it is only for **evaluation** of variables, but ANFer doesn't evaluate a name.
+- we no longer need `env`, `mt-env` and `ext-env`, since they're only for **evaluation** of variables, but ANFer never evaluates a name.
 - the basic idea is to defer the evaluation a little ... turn a dynamic process into a static expression (using quotation & quasiqutation).
-- the philosophical aspect of programming between "dynamic" and "static"...
+- it's the philosophical aspect of programming between "dynamic" and "static"...
 
 
 ```racket
@@ -180,16 +180,6 @@ Now the similarity between a CPSed interpreter and an ANFer has been revealed, w
                  (lambda (v2)
                    ;;TODO 
                    1))))])))
-  (define mt-env '())
-  (define ext-env
-    (lambda (x v env)
-      `((,x . ,v) . ,env)))
-  (define lookup
-    (lambda (x env)
-      (let ([p (assv x env)])
-        (cond
-          [(not p) #f]
-          [else (cdr p)]))))
   (define id (lambda (v) v))
   (! exp mt-env))
 ```
@@ -199,6 +189,23 @@ Try fill the `TODO` part of the ANFer code.
 ----------------------
 
 ## CPSer
+
+Motivation: what do you think is the difference  between these two expressions?
+
+```rachet
+(let ([v0 (f x)])
+  (let ([v1 (g y)])
+    (let ([v2 (v0 v1)])
+      v2)))
+```
+
+```racket
+(lambda (k)
+(f x (lambda (v0)
+       (g y (lambda (v1)
+              (v0 v1 (lambda (v2)
+                       (k v2))))))))
+```
 
 > underconstruction
 
