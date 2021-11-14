@@ -97,7 +97,8 @@ This kind of perspective can be better illustrated in a CPSed interpreter, since
         (cond
           [(not p) #f]
           [else (cdr p)]))))
-  (! exp mt-env))
+  (define id (lambda (v) v))
+  (! exp mt-env id))
 ```
 
 Now focus on that `v`, which can be read as "the already evaluated value from `(,e1 ,e2)`". It's the right thing to fill in the "hole".
@@ -117,6 +118,33 @@ Similarly, what is happening when the ANFer meets the same expression `(+ (* 2 3
 ```
 
 You can think as if the ANF transformation "defers" the evaluation to some later steps, or passes, pretty much like a compiler's job. In fact, ANF is an important compiler pass that exposes the "intra-expression" control flow and unnests the complex expressions.
+
+```racket
+(define !
+    (lambda (exp env C)
+      (match exp
+        [(? symbol? x) (C x)]      
+        [(? number? x) (C x)]
+        [`(lambda (,x) ,e)
+         ...                  ;; <= generate a new name?
+         ]
+        [`(,e1 ,e2)
+         (! e1
+            (lambda (v1)      ;; <= now it's a name
+              (! e2
+                 (lambda (v2)
+                   ...        ;; <= generate a new name for (v1 v2)
+                   ...        ;; <= construct a let-binding
+                   ...        ;; <= fill the hole with the new name
+                   ))))]
+        [`(,op ,e1 ,e2)
+         (! e1
+            (lambda (v1)
+              (! e2
+                 (lambda (v2)
+                   ...        ;; <= similar ... 
+                   ))))])))
+```
 
 ANF doesn't discriminate between `Number` and `Symbol`, it won't try to **evaluate** variables (i.e. lookup in the `env`).
 
