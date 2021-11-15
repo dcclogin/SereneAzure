@@ -235,7 +235,7 @@ There is always an occurrence of `k` at the inner-most position, so we can no lo
 ```racket
 (define idk (lambda (v) `(k ,v)))
 ```
-which means a continuation `k` bound by the `lambda` (door of the "new world") is waiting for `v` returned by the "new world". (Imaging the movie *Inception*!)
+which means a continuation `k` bound by the `lambda` (door of the "new world") is waiting for `v` returned by the "new world". (like the movie *Inception*!)
 
 Moreover, primitives like `+` and `*` should not be CPSed since they are not "serious function calls".
 
