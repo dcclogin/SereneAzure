@@ -114,7 +114,7 @@ in step 3 is exactly the `F` in `((Y F) 5)`. We expand the `let`-binding and fac
 
 ## Final Step
 
-Now we get Y combinator
+Now we get Y combinator!
 
 ```racket
 (lambda (F)
@@ -123,7 +123,3 @@ Now we get Y combinator
     (lambda (f)
       (F (lambda (x) ((f f) x))))))
 ```
-
-
-> under construction
-> Chinese reader can refer to my article on bilibili
