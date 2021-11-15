@@ -4,4 +4,4 @@ Inspiration from B521 and some of Yin's blog posts.
 
 ## How Why How Y!
 
-Somehow I don't know WHY is Y still bothering me...
+Somehow I don't know WHY is Y still bothering me... So I wrote down a simple Y derivation.
