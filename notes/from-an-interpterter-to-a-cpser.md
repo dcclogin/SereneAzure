@@ -47,7 +47,7 @@ First, we should quickly go through the Call-By-Value interpreter of lambda calc
     (lambda (x env)
       (let ([p (assv x env)])
         (cond
-          [(not p) #f]
+          [(not p) (error "unbound variable")]
           [else (cdr p)]))))
   (! exp mt-env))
 ```
@@ -97,7 +97,7 @@ This kind of perspective can be better illustrated in a CPSed interpreter, since
     (lambda (x env)
       (let ([p (assv x env)])
         (cond
-          [(not p) #f]
+          [(not p) (error "unbound variable")]
           [else (cdr p)]))))
   (define id (lambda (v) v))
   (! exp mt-env id))
