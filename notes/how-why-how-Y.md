@@ -88,7 +88,41 @@ Solution: eta-expansion.
 
 ## Fourth Step
 
+Observation: the `lambda`
 
+```racket
+(lambda (fact)
+  (lambda (n)
+    (cond
+      [(zero? n) 1]
+      [else (* n (fact (sub1 n))))])))
+```
+in step 3 is exactly the `F` in `((Y F) 5)`. We expand the `let`-binding and factor-out that `F`.
+
+```racket
+((lambda (F)
+   ((lambda (f)
+      (F (lambda (x) ((f f) x))))
+    (lambda (f)
+      (F (lambda (x) ((f f) x))))))
+ (lambda (fact)
+   (lambda (n)
+     (cond
+       [(zero? n) 1]
+       [else (* n (fact (sub1 n))))]))))
+```
+
+## Final Step
+
+Now we get Y combinator
+
+```racket
+(lambda (F)
+   ((lambda (f)
+      (F (lambda (x) ((f f) x))))
+    (lambda (f)
+      (F (lambda (x) ((f f) x))))))
+```
 
 
 > under construction
