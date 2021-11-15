@@ -288,5 +288,4 @@ Brainteasers:
 Olivier Danvy shows a one-pass transformation into monadic normal form (ANF) in [1], which is very similar to my ANFer. Interesting reader can add booleans and conditionals to the language. I also wrote 2 passes from P523 compiler course using similar techniques shown here, namely `explicate-control` and `remove-complex-opera*`, you can find them in [here] and [here].
 
 ## References
-> underconstruction
-[1] 
+1. Danvy, O. 2002. A New One-Pass Transformation into Monadic Normal Form. BRICS Report Series. 9, 52 (Dec. 2002). DOI:https://doi.org/10.7146/brics.v9i52.21767
