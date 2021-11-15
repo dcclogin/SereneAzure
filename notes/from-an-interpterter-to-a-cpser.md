@@ -275,17 +275,17 @@ Exercise:
 - Try fill the `TODO` part of CPSer.
 - Try tail call optimization (Hint: compare the context `C` with `idk`).
 
-----------------------
-
 Brainteasers:
-- Could we write a program `anf-to-cps` that **automatically** transforms a ANFer to a CPSer? What about `cps-to-anf`?
-- Could we write a program `t` that **automatically** transforms an interpreter to a "corresponding" ANFer or CPSer?
+- Can you write a program `uncps` that transforms back into original style?
+- Can you write a program `anf-to-cps` that **automatically** transforms a ANFer to a CPSer? What about `cps-to-anf`?
+- Can you write a program `t` that **automatically** transforms an interpreter to a "corresponding" ANFer or CPSer?
 
 -----------------------
 
 ## Related Work
 
-Olivier Danvy shows a one-pass transformation into monadic normal form (ANF) in [1], which is very similar to my ANFer. Interesting reader can add booleans and conditionals to the language. I also wrote 2 passes from P523 compiler course using similar techniques shown here, namely `explicate-control` and `remove-complex-opera*`, you can find them in [here] and [here].
+Olivier Danvy shows a one-pass transformation into monadic normal form in [ 1 ], which is very similar to my ANFer. Danvy and Filinski's work [ 2 ] has shown a detailed one-pass CPS transformation. Interesting reader can add features like booleans and conditionals to the source language. I also wrote 2 passes from P523 compiler course using similar techniques shown here, namely `explicate-control` and `remove-complex-opera*`, you can find them in [here] and [here].
 
 ## References
 1. Danvy, O. 2002. A New One-Pass Transformation into Monadic Normal Form. BRICS Report Series. 9, 52 (Dec. 2002). DOI:https://doi.org/10.7146/brics.v9i52.21767
+2. Danvy, O., & Filinski, A. (1992). Representing Control: A Study of the CPS Transformation. Mathematical Structures in Computer Science, 2(4), 361-391. doi:10.1017/S0960129500001535
