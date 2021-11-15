@@ -58,7 +58,36 @@ You can now run it!
 
 ## Third Step
 
-We lift the `(f f)` in the body and give it a new lambda binding.
+We "factor-out" the `(f f)` in the body and give it a new lambda binding.
+
+```racket
+(let ([f (lambda (f)
+           ((lambda (fact)
+	      (lambda (n)
+	        (cond
+	          [(zero? n) 1]
+	          [else (* n (fact (sub1 n))))])))
+            (f f)))])
+  ((f f) 5))
+```
+
+Unfortunately, this program will never terminate, because Racket is call-by-value and `(f f)` in that "argument position" will keep applying to itself...
+
+Solution: eta-expansion.
+
+```racket
+(let ([f (lambda (f)
+           ((lambda (fact)
+	      (lambda (n)
+	        (cond
+	          [(zero? n) 1]
+	          [else (* n (fact (sub1 n))))])))
+            (lambda (x) ((f f) x))))])
+  ((f f) 5))
+```
+
+## Fourth Step
+
 
 
 
