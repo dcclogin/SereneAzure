@@ -6,11 +6,11 @@ by Chenchao Ding, 2021
 Recall that:
 - An interpreter is a program that takes an **expression** as input, and gets its **meaning** as output, by **evaluation**.
 - An ANFer is a program that takes an **expression** as input, and get its **A-Normal Form** as output, by **correctness preserving transformation**.
-- An CPSer is a program that takes an **expression** as input, and get its **CPSed form** as output, by **correctness preserving transformation**.
+- A CPSer is a program that takes an **expression** as input, and get its **CPSed form** as output, by **correctness preserving transformation**.
 
 Somehow you may have an intuitive thought: could we derive a ANFer/CPSer from an interpreter, given the language (grammar, or patterns matched)?
 
-This is a tutorial note that shows you how to **manually** perform such a derivation, or say, a transformation! We first show how to quickly get an ANFer from an interpreter, then from ANFer to CPSer. It's like a "two-pass" derivation.
+This is a tutorial that shows you how to **manually** perform such a derivation, or say, a transformation! We first show how to quickly get an ANFer from an interpreter, then from the ANFer to a CPSer. It's like a "two-pass" derivation.
 
 ## Interpreter
 
