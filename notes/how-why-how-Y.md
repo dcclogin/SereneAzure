@@ -19,10 +19,10 @@ Try writing a recursive function, say `fact`, using `let`, naively.
 
 ```racket
 (let ([f (lambda (n)
-			     (cond
-				     [(zero? n) 1]
-				     [else (* n (f (sub1 n)))]))])
-	(f 5))
+           (cond
+	     [(zero? n) 1]
+	     [else (* n (f (sub1 n)))]))])
+  (f 5))
 ```
 
 You won't be able to run it, since it doesn't pass static checkings. Here `f` is a free variable in the body of the lambda.
@@ -34,10 +34,10 @@ Try to bind that free `f`, using `lambda` the ultimate binder!
 ```racket
 (let ([f (lambda (f)
            (lambda (n)
-			       (cond
-				       [(zero? n) 1]
-				       [else (* n (f (sub1 n))))]))])
-	(f 5))
+	     (cond
+	       [(zero? n) 1]
+	       [else (* n (f (sub1 n))))]))])
+  (f 5))
 ```
 But wait, now `(f 5)` and `(f (sub1 n))` is nonsense. What instead should we pass to that newly bound `f`?
 
@@ -48,10 +48,10 @@ Yes, we should pass `f` to `f`, since making `f` "visible to itself" is our purp
 ```racket
 (let ([f (lambda (f)
            (lambda (n)
-			       (cond
-				       [(zero? n) 1]
-				       [else (* n ((f f) (sub1 n))))]))])
-	((f f) 5))
+	     (cond
+	       [(zero? n) 1]
+	       [else (* n ((f f) (sub1 n))))]))])
+  ((f f) 5))
 ```
 
 You can now run it!
