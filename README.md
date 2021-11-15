@@ -35,5 +35,5 @@ Some programs that have great value for me (maybe not for you). Sometimes they c
 ## notes
 Some tutorial notes you may find interesting:
 - From an Interpreter to a CPSer.
-- ...
+- How to derive Y combinator?
 
