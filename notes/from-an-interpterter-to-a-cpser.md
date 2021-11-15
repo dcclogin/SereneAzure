@@ -149,10 +149,10 @@ Now the similarity between a CPSed interpreter and an ANFer has been revealed, w
 ```
 Here are the differences:
 
-- ANF doesn't discriminate between `Number` and `Symbol`, it won't try to **evaluate** variables (i.e. lookup in the `env`).
+- ANFer doesn't discriminate between `Number` and `Symbol`, it won't try to **evaluate** variables (i.e. lookup in the `env`).
 - we no longer need `env`, `mt-env` and `ext-env`, since they're only for **evaluation** of variables, but ANFer never evaluates a name.
 - we don't care what `e1` really is, so we no longer need definition of closure and that pattern matching line.
-- we are entering a "new world" when ANFing the body `b` of `(lambda (,x) ,b)`, thus a fresh id context is needed.
+- we are entering a "new world" when ANFing the body `b` of `(lambda (,x) ,b)`, thus a fresh `id` context is needed.
 
 The very basic idea is to defer the evaluation a little ... turn a dynamic process into a static expression (using quotation & quasiqutation). It's the philosophical side of programming with notions like "dynamic" and "static"...:)
 
@@ -289,6 +289,9 @@ Just Dessert!
 ## Related Work
 
 Olivier Danvy shows a one-pass transformation into monadic normal form in [ 1 ], which is very similar to my ANFer. Danvy and Filinski's work [ 2 ] has shown a detailed one-pass CPS transformation. Interesting reader can add features like booleans and conditionals to the source language. I also wrote 2 passes from P523 compiler course using similar techniques shown here, namely `explicate-control` and `remove-complex-opera*`, you can find them [here](https://github.com/dcclogin/SereneAzure/blob/master/expose-basic-block.rkt) and [here](https://github.com/dcclogin/SereneAzure/blob/master/rco.rkt).
+
+My reference implementation of CPSer can be found [here](https://github.com/dcclogin/SereneAzure/blob/master/CPSer.rkt).
+Yin's implementation of CPSer can be found [here](https://www.yinwang.org/blog-cn/2012/07/04/dan-friedman) (it's one of his Chinese blog post).
 
 ## References
 0. Cormac Flanagan, Amr Sabry, Bruce F. Duba, and Matthias Felleisen. 1993. The essence of compiling with continuations. SIGPLAN Not. 28, 6 (June 1993), 237–247. DOI:https://doi.org/10.1145/173262.155113
