@@ -117,7 +117,7 @@ Similarly, what is happening when the ANFer meets the same expression `(+ (* 2 3
    ,(anf `(+ v.0 (+ 4 2))))
 ```
 
-You can think as if the ANF transformation "defers" the evaluation to some later steps, or passes, pretty much like a compiler's job. In fact, ANF is an important compiler pass that exposes the "intra-expression" control flow and unnests the complex expressions.
+You can think as if the ANF transformation "defers" the evaluation to some later steps, or passes, pretty much like a compiler's job. In fact, ANF is an important compiler pass that exposes the "intra-expression" control flow and unnests the complex expressions [ 0 ].
 
 Now the similarity between a CPSed interpreter and an ANFer has been revealed, we can write down the skeleton code for ANFer:
 
@@ -287,5 +287,6 @@ Brainteasers:
 Olivier Danvy shows a one-pass transformation into monadic normal form in [ 1 ], which is very similar to my ANFer. Danvy and Filinski's work [ 2 ] has shown a detailed one-pass CPS transformation. Interesting reader can add features like booleans and conditionals to the source language. I also wrote 2 passes from P523 compiler course using similar techniques shown here, namely `explicate-control` and `remove-complex-opera*`, you can find them [here](https://github.com/dcclogin/SereneAzure/blob/master/expose-basic-block.rkt) and [here](https://github.com/dcclogin/SereneAzure/blob/master/rco.rkt).
 
 ## References
+0. Cormac Flanagan, Amr Sabry, Bruce F. Duba, and Matthias Felleisen. 1993. The essence of compiling with continuations. SIGPLAN Not. 28, 6 (June 1993), 237–247. DOI:https://doi.org/10.1145/173262.155113
 1. Danvy, O. 2002. A New One-Pass Transformation into Monadic Normal Form. BRICS Report Series. 9, 52 (Dec. 2002). DOI:https://doi.org/10.7146/brics.v9i52.21767
 2. Danvy, O., & Filinski, A. (1992). Representing Control: A Study of the CPS Transformation. Mathematical Structures in Computer Science, 2(4), 361-391. doi:10.1017/S0960129500001535
