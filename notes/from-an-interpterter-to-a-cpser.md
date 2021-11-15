@@ -230,12 +230,12 @@ But transforming into CPS is not that trivial if `lambda` is in consideration. T
                 (v0 v1 k)))))))
 ```
 
-We can no longer "enter a new world" with the `id` context, instead we need a slightly modified context `idk`:
+There is always an occurrence of `k` at the inner-most position, so we can no longer "enter a new world" with the `id` context. Instead, we need a slightly modified context `idk`:
 
 ```racket
 (define idk (lambda (v) `(k ,v)))
 ```
-which means a continuation `k` bound by the `lambda` (door of the "new world") is waiting for `v` returned by the "new world".
+which means a continuation `k` bound by the `lambda` (door of the "new world") is waiting for `v` returned by the "new world". (Imaging the movie *Inception*!)
 
 Moreover, primitives like `+` and `*` should not be CPSed since they are not "serious function calls".
 
@@ -268,8 +268,9 @@ Moreover, primitives like `+` and `*` should not be CPSed since they are not "se
   (! exp id))
 ```
 
-This is really beautiful because we just wrote a CPSer using CPS!
+This is really beautiful. We just wrote a CPSer using CPS!
 
+*The End*
 
 Exercise:
 - Try fill the `TODO` part of CPSer.
