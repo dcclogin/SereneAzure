@@ -277,6 +277,9 @@ Exercise:
 
 Brainteasers:
 - Can you write a program `uncps` that transforms back into original style?
+- Try adding multiple arguments functions to CPSer.
+
+Just Dessert!
 - Can you write a program `anf-to-cps` that **automatically** transforms a ANFer to a CPSer? What about `cps-to-anf`?
 - Can you write a program `t` that **automatically** transforms an interpreter to a "corresponding" ANFer or CPSer?
 
