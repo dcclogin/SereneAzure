@@ -134,11 +134,11 @@ Now the similarity between a CPSed interpreter and an ANFer has been revealed, w
         [(? symbol? x) (C x)]      
         [(? number? x) (C x)]
         [`(lambda (,x) ,e)
-         ...                  ;; <= generate a new name?
+         ...                  ;; <= generate a new name for each lambda?
          ]
         [`(,e1 ,e2)
          (! e1
-            (lambda (v1)      ;; <= now it's a name (instead of a value)
+            (lambda (v1)      ;; <= it's no longer a value
               (! e2
                  (lambda (v2)
                    ...        ;; <= generate a new name for `(,v1 ,v2)
@@ -189,6 +189,7 @@ The very basic idea is to defer the evaluation a little ... turn a dynamic proce
   (define id (lambda (v) v))
   (! exp id))
 ```
+Now the `v` is the **name** refers to `(,v1 ,v2)`, which is the right thing to fill in the "hole" now.
 
 Exercise: 
 - Try fill the `TODO` part of the ANFer code.
