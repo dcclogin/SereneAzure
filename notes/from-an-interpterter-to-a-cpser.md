@@ -116,7 +116,7 @@ Similarly, what is happening when the ANFer meets the same expression `(+ (* 2 3
 
 - there is also a context `(+ [ ] (+ 4 2))`, where `[ ]` is a "hole" waiting for something to fill in.
 - there is also a control expression, `(* 2 3)`, which gets a name `v.0` to refer to it later, then **gives back** the name to the "hole".
-- the ANFer continues to **reconstructs** expressions (naming and let-binding).
+- the ANFer continues to **reconstruct** expressions (naming and let-binding).
 
 ```racket
 `(let ([v.0 (* 2 3)])
