@@ -236,7 +236,7 @@ But transforming into CPS is not that trivial if `lambda` is in consideration. T
                 (v0 v1 (lambda (v2)
                          (k v2))))))))
 ```
-=> (optimized tail call)
+=> (proper tail call)
 ```racket
 (lambda (x k) 
   (f x (lambda (v0)
@@ -288,7 +288,7 @@ This is beautiful because we just wrote a CPSer using CPS!
 
 Exercise:
 - Try fill the `TODO` part of CPSer.
-- Try tail call optimization (Hint: compare the context `C` with `idk`).
+- Try proper tail cal (Hint: compare the context `C` with `idk`).
 
 Brainteasers:
 - Can you write a program `uncps` that transforms back into original style?
