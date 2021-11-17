@@ -60,7 +60,7 @@ Try reasoning in your mind what is happening when the interpreter recursively ha
 
 ## CPSed interpreter
 
-This kind of perspective can be better illustrated in a CPSed interpreter, since an evaluation context is essentially a continuation:
+The notion of evaluation context can be more explicit and better illustrated in a CPSed interpreter, since an evaluation context is essentially a continuation:
 
 ```racket
 (define (interp exp)     
@@ -74,7 +74,7 @@ This kind of perspective can be better illustrated in a CPSed interpreter, since
         [`(lambda (,x) ,e) (C (Closure exp env))]
         [`(,e1 ,e2)
          (! e1
-            (lambda (v1)                              ;; <= it's a "value" to fill the "hole"
+            (lambda (v1)                              ;; <= v1, v2 are "values" to fill the "hole"
               (! e2
                  (lambda (v2)
                    (match v1
@@ -104,7 +104,7 @@ This kind of perspective can be better illustrated in a CPSed interpreter, since
   (! exp mt-env id))
 ```
 
-Now focus on that `v`, which can be read as "the already evaluated value from `(,e1 ,e2)`". It's the right thing to fill in the "hole".
+That `v` carries the value of `(,e1 ,e2)`, which is the right thing to fill in the "hole" now.
 
 ## ANFer
 
@@ -151,7 +151,7 @@ Now the similarity between a CPSed interpreter and an ANFer has been revealed, w
 ```
 Here are the differences:
 
-- ANFer doesn't discriminate between `Number` and `Symbol`, it won't try to **evaluate** variables (i.e. lookup in the `env`).
+- ANFer doesn't distinguish between `Number` and `Symbol`: it won't try to **evaluate** variables (i.e. lookup in the `env`).
 - we no longer need `env`, `mt-env` and `ext-env`, since they're only for **evaluation** of variables, but ANFer never evaluates a name.
 - we don't care what `e1` really is, so we no longer need definition of closure and that pattern matching line.
 - we are entering a "new world" when ANFing the body `b` of `(lambda (,x) ,b)`, thus a fresh `id` context is needed.
