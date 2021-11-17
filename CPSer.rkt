@@ -30,7 +30,7 @@
         [`(if ,cnd ,thn ,els)
          (! cnd
             (lambda (cnd@)
-              `(if ,cnd@ ,(! thn C) ,(! els C))))])))
+              `(if ,cnd@ ,(! thn C) ,(! els C))))])))   ;; tail position
   (define gensym
     (lambda (split)
       (let ([n -1])
