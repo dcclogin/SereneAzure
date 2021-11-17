@@ -62,6 +62,11 @@ Try reasoning in your mind what is happening when the interpreter recursively ha
 - there is a control expression `(* 2 3)`, which gets evaluated to `6`, then **gives back** the value to the "hole".
 - the interpreter continues to **evaluate** expressions.
 
+```racket
+(let ([v1 (* 2 3)])
+  (C v1))
+```
+
 ## CPSed interpreter
 
 The notion of evaluation context can be more explicit and better illustrated in a CPSed interpreter, since an evaluation context is essentially a continuation:
