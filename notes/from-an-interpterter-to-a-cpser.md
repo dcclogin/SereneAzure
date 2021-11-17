@@ -120,7 +120,7 @@ Similarly, what is happening when the ANFer meets the same expression `(+ (* 2 3
 
 ```racket
 `(let ([v.0 (* 2 3)])
-   ,(anf `(+ v.0 (+ 4 2))))
+   ,(C 'v.0))
 ```
 
 You can think as if the ANF transformation "defers" the evaluation to some later steps, or passes, pretty much like a compiler's job. In fact, ANF is an important compiler pass that exposes the "intra-expression" control flow and unnests the complex expressions [ 0 ].
