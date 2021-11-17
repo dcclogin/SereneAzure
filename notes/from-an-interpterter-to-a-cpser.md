@@ -189,7 +189,7 @@ The very basic idea is to defer the evaluation a little ... turn a dynamic proce
   (define id (lambda (v) v))
   (! exp id))
 ```
-Now the `v` is the **name** refers to `(,v1 ,v2)`, which is the right thing to fill in the "hole" now.
+The `v` is the **name** refers to `(,v1 ,v2)`, which is the right thing to fill in the "hole" now.
 
 Exercise: 
 - Try fill the `TODO` part of the ANFer code.
