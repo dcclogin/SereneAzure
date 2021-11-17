@@ -59,8 +59,8 @@ First, we should quickly go through the Call-By-Value interpreter of lambda calc
 Try reasoning in your mind what is happening when the interpreter recursively handles expression like `(+ (* 2 3) (+ 4 2))`:
 
 - there is an evaluation context, `(+ [ ] (+ 4 2))`, where `[ ]` is a "hole" waiting for something to fill in.
-- there is a control expression `(* 2 3)`, which gets evaluated to `6`, then **gives back** the value to the "hole" to form a new expression.
-- the interpreter recursively **evaluates the new expression**.
+- there is a control expression `(* 2 3)`, which gets evaluated to `6`, then **gives back** the value to the "hole".
+- the interpreter continues to **evaluate** expressions.
 
 ## CPSed interpreter
 
@@ -115,8 +115,8 @@ That `v` carries the value of `(,e1 ,e2)`, which is the right thing to fill in t
 Similarly, what is happening when the ANFer meets the same expression `(+ (* 2 3) (+ 4 2))`?
 
 - there is also a context `(+ [ ] (+ 4 2))`, where `[ ]` is a "hole" waiting for something to fill in.
-- there is also a control expression, `(* 2 3)`, which gets a name `v.0` to refer to it later, then **gives back** the name to the "hole" to form a new expression.
-- the ANFer recursively **reconstructs the new expression**.
+- there is also a control expression, `(* 2 3)`, which gets a name `v.0` to refer to it later, then **gives back** the name to the "hole".
+- the ANFer continues to **reconstructs** expressions (naming and let-binding).
 
 ```racket
 `(let ([v.0 (* 2 3)])
