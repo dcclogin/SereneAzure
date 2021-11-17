@@ -164,15 +164,15 @@ The very basic idea is to defer the evaluation a little ... turn a dynamic proce
         [(? symbol? x) (C x)]      
         [(? number? x) (C x)]
         [`(lambda (,x) ,e)
-         (C `(lambda (,x) ,(! e id)))]          ;; <= enter a "new world" via id context 
+         (C `(lambda (,x) ,(! e id)))]          ;; <= enter a "new world" with id context 
         [`(,e1 ,e2)
          (! e1
             (lambda (v1)
               (! e2
                  (lambda (v2)
-                   (let ([v (gensym 'v)])       ;; <= new name v
-                     `(let ([,v (,v1 ,v2)])     ;; <= let-binding via quasi`
-                        ,(C v)))))))]           ;; <= fill in v via unquote,
+                   (let ([v (gensym 'v)])       ;; <= new name v for `(,v1 ,v2)
+                     `(let ([,v (,v1 ,v2)])     ;; <= construct let-binding via quasi`
+                        ,(C v)))))))]           ;; <= fill in the hole with v via unquote,
         [`(,op ,e1 ,e2)
          (! e1
             (lambda (v1)
@@ -207,7 +207,7 @@ Motivation: what do you think is the difference  between these two expressions?
                          (k v2))))))))
 ```
 
-They are in some way really the same thing! We can simply modify the "construct let-binding" part of code.
+They are in some way really the same thing! We can simply modify the "construct let-binding" part of code to turn our ANFer into a CPSer.
 
 But transforming into CPS is not that trivial if `lambda` is in consideration. Try manually CPS-transforming the following expression:
 
@@ -235,7 +235,7 @@ There is always an occurrence of `k` at the inner-most position, so we can no lo
 ```racket
 (define idk (lambda (v) `(k ,v)))
 ```
-which means a continuation `k` bound by the `lambda` (door of the "new world") is waiting for `v` returned by the "new world". (like the movie *Inception*!)
+which means a continuation `k` bound by the current `lambda` (door of the "new world") is waiting for `v`'s back. (same metaphor as recursive dreams in the movie *Inception*!)
 
 Moreover, primitives like `+` and `*` should not be CPSed since they are not "serious function calls".
 
@@ -255,7 +255,7 @@ Moreover, primitives like `+` and `*` should not be CPSed since they are not "se
                  (lambda (v2)
                    (let ([v (gensym 'v)])          ;; <= new name v
                      `(,v1 ,v2 (lambda (,v)        ;; <= construct CPSed call via quasi`
-                        ,(C v))))))))]             ;; <= fill in v via unquote,
+                        ,(C v))))))))]             ;; <= fill in the hole with v via unquote,
         [`(,op ,e1 ,e2)
          (! e1
             (lambda (v1)
@@ -268,7 +268,7 @@ Moreover, primitives like `+` and `*` should not be CPSed since they are not "se
   (! exp id))
 ```
 
-This is really beautiful. We just wrote a CPSer using CPS!
+This is really beautiful because we just wrote a CPSer using CPS!
 
 *The End*
 
