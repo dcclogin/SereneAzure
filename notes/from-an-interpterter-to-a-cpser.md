@@ -3,7 +3,7 @@
 by Chenchao Ding, 2021
 
 You only need to know: 
-1. How to write an interpreter.
+1. How to write an interpreter in Racket.
 2. What CPS and ANF mean.
 3. How to manually CPS a program.
 
@@ -65,8 +65,8 @@ Try reasoning in your mind what is happening when the interpreter recursively ha
 ```racket
 (C (* 2 3))
 ;; => 
-(let ([v1 (* 2 3)])
-  (C v1))
+(let ([v.0 (* 2 3)])
+  (C v.0))
 ```
 
 ## CPSed interpreter
@@ -91,7 +91,7 @@ The notion of evaluation context can be more explicit and better illustrated in 
                    (match v1
                      [(Closure `(lambda (,x) ,e) env-save)
                       (! e (ext-env x v2 env-save)    ;; <= do evaluation
-                        (lambda (v)                   ;; <= focus on this v
+                        (lambda (v)                   ;; <= bind the value to v
                           (C v)))])))))]              ;; <= fill the hole with the value v carries 
         [`(,op ,e1 ,e2)
          (! e1
@@ -130,7 +130,7 @@ Similarly, what is happening when the ANFer meets the same expression `(+ (* 2 3
    ,(C 'v.0))
 ```
 
-You can think as if the ANF transformation "defers" the evaluation to some later steps, or passes, pretty much like a compiler's job. In fact, ANF is an important compiler pass that exposes the "intra-expression" control flow and unnests the complex expressions [ 0 ].
+See the similarity? You can think as if the ANF transformation "defers" the evaluation to some later steps, or passes, pretty much like a compiler's job. In fact, ANF is an important compiler pass that exposes the "intra-expression" control flow and unnests the complex expressions [ 0 ].
 
 Now the similarity between a CPSed interpreter and an ANFer has been revealed, we can write down the skeleton code for ANFer:
 
@@ -141,7 +141,7 @@ Now the similarity between a CPSed interpreter and an ANFer has been revealed, w
         [(? symbol? x) (C x)]      
         [(? number? x) (C x)]
         [`(lambda (,x) ,e)
-         ...                  ;; <= generate a new name for each lambda?
+         ...                  ;; <= should I generate a new name for each lambda?
          ]
         [`(,e1 ,e2)
          (! e1
