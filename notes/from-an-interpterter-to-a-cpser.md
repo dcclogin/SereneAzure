@@ -254,7 +254,7 @@ Moreover, primitives like `+` and `*` should not be CPSed since they are not "se
         [(? symbol? x) (C x)]      
         [(? number? x) (C x)]
         [`(lambda (,x) ,e)
-         (C `(lambda (,x k) ,(! e idk)))]          ;; <= enter a "new world" via idk context 
+         (C `(lambda (,x k) ,(! e idk)))]          ;; <= enter a "new world" with idk context 
         [`(,e1 ,e2)
          (! e1
             (lambda (v1)
