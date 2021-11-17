@@ -303,8 +303,8 @@ Just Dessert!
 
 Olivier Danvy shows a one-pass transformation into monadic normal form in [ 1 ], which is very similar to my ANFer. Danvy and Filinski's work [ 2 ] has shown a detailed one-pass CPS transformation. Interesting reader can add features like booleans and conditionals to the source language. I also wrote 2 passes from P523 compiler course using similar techniques shown here, namely `explicate-control` and `remove-complex-opera*`, you can find them [here](https://github.com/dcclogin/SereneAzure/blob/master/expose-basic-block.rkt) and [here](https://github.com/dcclogin/SereneAzure/blob/master/rco.rkt).
 
-My reference implementation of CPSer can be found [here](https://github.com/dcclogin/SereneAzure/blob/master/CPSer.rkt).
-Yin's implementation of CPSer can be found [here](https://www.yinwang.org/blog-cn/2012/07/04/dan-friedman) (it's one of his Chinese blog post).
+My reference implementation of CPSer can be found [here](https://github.com/dcclogin/SereneAzure/blob/master/CPSer.rkt) (without non-tail conditionals).
+Yin's "light" version CPSer can be found [here](https://www.yinwang.org/blog-cn/2012/07/04/dan-friedman) (it's one of his Chinese blog post).
 
 ## References
 0. Cormac Flanagan, Amr Sabry, Bruce F. Duba, and Matthias Felleisen. 1993. The essence of compiling with continuations. SIGPLAN Not. 28, 6 (June 1993), 237–247. DOI:https://doi.org/10.1145/173262.155113
