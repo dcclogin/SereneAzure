@@ -55,7 +55,8 @@ First, we should quickly go through the Call-By-Value interpreter of lambda calc
 Try reasoning in your mind what is happening when the interpreter recursively handles expression like `(+ (* 2 3) (+ 4 2))`:
 
 - there is an evaluation context, `(+ [ ] (+ 4 2))`, where `[ ]` is a "hole" waiting for something to fill in.
-- there is a control expression, i.e. `(* 2 3)`, which gets reduced/evaluated to `6`, then **gives back** the result to the "hole".
+- there is a control expression `(* 2 3)`, which gets evaluated to `6`, then **gives back** the value to the "hole" to form a new expression.
+- the interpreter recursively **evaluates the new expression**.
 
 ## CPSed interpreter
 
@@ -110,7 +111,8 @@ Now focus on that `v`, which can be read as "the already evaluated value from `(
 Similarly, what is happening when the ANFer meets the same expression `(+ (* 2 3) (+ 4 2))`?
 
 - there is also a context `(+ [ ] (+ 4 2))`, where `[ ]` is a "hole" waiting for something to fill in.
-- there is also a control expression, `(* 2 3)`, which is given a name `v.0` to refer to it later, then **gives back** the name to the "hole".
+- there is also a control expression, `(* 2 3)`, which gets a name `v.0` to refer to it later, then **gives back** the name to the "hole" to form a new expression.
+- the ANFer recursively **reconstructs the new expression**.
 
 ```racket
 `(let ([v.0 (* 2 3)])
@@ -154,7 +156,7 @@ Here are the differences:
 - we don't care what `e1` really is, so we no longer need definition of closure and that pattern matching line.
 - we are entering a "new world" when ANFing the body `b` of `(lambda (,x) ,b)`, thus a fresh `id` context is needed.
 
-The very basic idea is to defer the evaluation a little ... turn a dynamic process into a static expression (using quotation & quasiqutation). It's the philosophical side of programming with notions like "dynamic" and "static"...:)
+The very basic idea is to defer the evaluation a little ... turn a dynamic process into a static expression (using quotation & quasiquotation). It's interesting to program with notions like "dynamic" and "static"...:)
 
 ```racket
 (define (anf exp)
@@ -190,7 +192,7 @@ Exercise:
 
 ## CPSer
 
-Motivation: what do you think is the difference  between these two expressions?
+Motivation: what do you think is the difference between these two expressions?
 
 ```rachet
 (let ([v0 (f x)])
@@ -237,7 +239,7 @@ There is always an occurrence of `k` at the inner-most position, so we can no lo
 ```
 which means a continuation `k` bound by the current `lambda` (door of the "new world") is waiting for `v`'s back. (same metaphor as recursive dreams in the movie *Inception*!)
 
-Moreover, primitives like `+` and `*` should not be CPSed since they are not "serious function calls".
+Moreover, primitives like `+` and `*` should not be CPSed since they are not "serious function calls", which is different from ANFer.
 
 ```racket
 (define (cps exp)     
@@ -268,7 +270,7 @@ Moreover, primitives like `+` and `*` should not be CPSed since they are not "se
   (! exp id))
 ```
 
-This is really beautiful because we just wrote a CPSer using CPS!
+This is beautiful because we just wrote a CPSer using CPS!
 
 *The End*
 
