@@ -141,15 +141,15 @@ Now the similarity between a CPSed interpreter and an ANFer has been revealed, w
         [(? symbol? x) (C x)]      
         [(? number? x) (C x)]
         [`(lambda (,x) ,e)
-         ...                  ;; <= should I generate a new name for each lambda?
+         ...                  ;; <= enter a new world in the body e
          ]
         [`(,e1 ,e2)
          (! e1
-            (lambda (v1)      ;; <= it's no longer a value
-              (! e2
+            (lambda (v1)      ;; <= v1, v2 is no longer "values"
+              (! e2           ;;    instead, they are names, numbers and lambdas (not closures!)
                  (lambda (v2)
                    ...        ;; <= generate a new name for `(,v1 ,v2)
-                   ...        ;; <= construct a let-binding
+                   ...        ;; <= construct a let-binding with the new name
                    ...        ;; <= fill the hole with the new name
                    ))))]
         [`(,op ,e1 ,e2)
@@ -200,7 +200,7 @@ The `v` is the **name** refers to `(,v1 ,v2)`, which is the right thing to fill 
 
 Exercise: 
 - Try fill the `TODO` part of the ANFer code.
-- What if we name each `lambda`? Modify the code.
+- What if we give each `lambda` a new name and let-bind it? Modify the code.
 
 ## CPSer
 
@@ -221,7 +221,7 @@ Motivation: what do you think is the difference between these two expressions?
                          (k v2))))))))
 ```
 
-They are in some way really the same thing! We can simply modify the "construct let-binding" part of code to turn our ANFer into a CPSer.
+They are in some way really the same thing! It seems we can simply modify the "construct let-binding" part of code to turn our ANFer into a CPSer.
 
 But transforming into CPS is not that trivial if `lambda` is in consideration. Try manually CPS-transforming the following expression:
 
