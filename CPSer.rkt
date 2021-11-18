@@ -21,7 +21,7 @@
                         `(,v1 ,v2
                               (lambda (,v) ,(C v))))])))))]
         [`(,op ,e1 ,e2)
-        #:when (memq op bin-op)
+         #:when (memq op bin-op)
          (! e1
             (lambda (v1)
               (! e2
