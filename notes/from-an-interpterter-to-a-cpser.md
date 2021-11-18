@@ -288,7 +288,7 @@ This is beautiful because we just wrote a CPSer using CPS!
 
 Exercise:
 - Try fill the `TODO` part of CPSer.
-- Try proper tail cal (Hint: compare the context `C` with `idk`).
+- Try proper tail call (Hint: compare the context `C` with `idk`).
 
 Brainteasers:
 - Can you write a program `uncps` that transforms back into original style?
