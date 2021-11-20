@@ -221,9 +221,7 @@ Motivation: what do you think is the difference between these two expressions?
                          (k v2))))))))
 ```
 
-They are in some way really the same thing! It seems we can simply modify the "construct let-binding" part of code to turn our ANFer into a CPSer.
-
-But transforming into CPS is not that trivial if `lambda` is in consideration. Try manually CPS-transforming the following expression:
+They are in some way really the same thing! It seems we can simply modify the "construct let-binding" part of code to turn our ANFer into a CPSer. But transforming into CPS is not that trivial if `lambda` is in consideration. Try manually CPS-transforming the following expression:
 
 ```racket
 (lambda (x) ((f x) (g y)))
