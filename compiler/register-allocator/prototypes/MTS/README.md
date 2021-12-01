@@ -1,14 +1,23 @@
 ## Source Language
 
+> under construction
+
 UIL
 
 ```
-exp := v | ...
+atm := number
+       | vars 'x 'y 'z ... 
+       | bool 'true 'false
+uop := - | not
+bop := + | - | *
+       | eq? | < | > | <= | >= 
+exp := atm | (fun-ref vars)
+       | (bop atm atm)
        | (set! x exp)
        | (if exp exp exp)
        | (while exp exp)
        | (begin exp exp ...)
-       | ...
+       | (fun-app exp exp ...)
 ```
 
 
