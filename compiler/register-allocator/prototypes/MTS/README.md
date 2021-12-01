@@ -6,19 +6,26 @@ UIL
 
 ```
 atm := number
-       | vars 'x 'y 'z ... 
-       | bool 'true 'false
+       | vars : x, y, f ... 
+       | bool : true, false
 uop := - | not
 bop := + | - | *
        | eq? | < | > | <= | >= 
-exp := atm | (fun-ref vars)
+exp := atm | (fun-ref f)
        | (bop atm atm)
        | (set! x exp)
        | (if exp exp exp)
        | (while exp exp)
        | (begin exp exp ...)
        | (fun-app exp exp ...)
+
+def := (f (x y z ...) exp)
+program := (P '() (def def ...))
 ```
+
+Example:
+
+
 
 
 ## Features
