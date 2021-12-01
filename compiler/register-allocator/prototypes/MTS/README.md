@@ -1,3 +1,9 @@
+## Credit
+
+This is a semantics-based, syntax-directed register allocator. Credit for original idea of *model* and static cache replacement goes to Yin Wang and R. Kent Dybvig.
+This project is my implementation with some extensions and tests in Racket. My future work is to justify and further mechanize it in a proof assistant like Agda.
+
+
 ## Source Language
 
 **UIL** (name from R. Kent Dybvig's notes)
