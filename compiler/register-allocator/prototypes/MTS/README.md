@@ -25,7 +25,28 @@ program := (P '() (def def ...))
 
 Example:
 
+## Register Sets & Frame Variables
 
+Adjust to most concrete calling conventions.
+
+1. caller-saved registers (8)
+```
+caller := r0 | r1 | r2 | r3 | r4 | r5 | r6 | r7
+```
+2. callee-saved registers (5)
+```
+callee := r8 | r9 | ra | rb | rc
+```
+3. parameter passing registers (6)
+```
+params := r0 | r1 | r2 | r3 | r4 | r5
+```
+
+For frame variables:
+```
+fvs := fv.0, fv.1, fv.2 ...
+```
+The natural number after `.` means the offset to the base pointer of the current stack frame.
 
 
 ## Features
