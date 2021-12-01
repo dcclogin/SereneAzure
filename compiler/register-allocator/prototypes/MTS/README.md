@@ -1,8 +1,6 @@
 ## Source Language
 
-> under construction
-
-UIL
+**UIL** (name from R. Kent Dybvig's notes)
 
 ```
 atm := number
@@ -47,6 +45,27 @@ For frame variables:
 fvs := fv.0, fv.1, fv.2 ...
 ```
 The natural number after `.` means the offset to the base pointer of the current stack frame.
+
+## Goal(s) of the game
+
+1. to minimize register-memory traffic.
+2. to minimize register-register traffic.
+
+These two goals are different from standard graph coloring algorithms, which aim to minimize the number of **spills**.
+**But how does this difference impact metrics like code generation?**
+
+## Rules of the game
+
+1. allocate each variable one register per occurence.
+2. two occurences of the same variable may get allocated two different registers, which means live-range splitting on-the-fly [1].
+3. ...
+
+
+## Model as abstraction of regs & fvs
+
+> under construction
+
+Recall the `env` argument of a call-by-value interpreter.
 
 
 ## Features
