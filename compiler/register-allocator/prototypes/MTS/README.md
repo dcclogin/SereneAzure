@@ -3,6 +3,9 @@
 This is a semantics-based, syntax-directed register allocator. Credit for original idea of *model* and static cache replacement goes to Yin Wang and R. Kent Dybvig.
 This project is my implementation with some extensions and tests in Racket. My future work is to justify and further mechanize it in a proof assistant like Agda.
 
+## Big Picture
+
+The main idea is to do abstract interpretation on source language, viewing registers as "caches" of frame variables on procedure call stacks. The analogy of *static* registers and *dynamic* caches is the inspiration of static cache replacement algorithm of this method.
 
 ## Source Language
 
