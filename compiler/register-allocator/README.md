@@ -4,4 +4,4 @@ Model Transformer Semantics
 
 ## Credit
 
-Original idea fro Yin Wang and R. Kent Dybvig.
+Original idea from Yin Wang and R. Kent Dybvig.
