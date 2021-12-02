@@ -88,3 +88,7 @@ Recall the `env` argument of a call-by-value interpreter.
 1. Re-implement in Abstract Machine Style.
 2. More efficient operations on models (bind, unbind, delete, shuffle, etc.)
 3. Improve code for function calls.
+
+## References
+
+[1] Yin Wang and R. Kent Dybvig. Register allocation by model transformer semantics. CoRR, abs/1202.5539, 2012.
