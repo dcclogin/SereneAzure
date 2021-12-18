@@ -92,6 +92,12 @@ E.g.
 2. Support whileloops, with less accurate approximation for liveness analysis temporarily.
 
 
+
+## Known Issues
+
+1. `tak` in the benchmark tests will generate broken x86 code. 
+
+
 ## Future Work
 
 1. Re-implement in Abstract Machine Style.
