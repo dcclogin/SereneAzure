@@ -72,10 +72,19 @@ These two goals are different from standard graph coloring algorithms, which aim
 
 ## Model as abstraction of regs & fvs
 
-> under construction
 
-Recall the `env` argument of a call-by-value interpreter.
+Recall the `env` argument of a call-by-value interpreter: it is the abstraction of variable bindings of current frame; similarly, in register allocation, there is an abstraction of mappings between variable names and registers plus frame locations. We use `struct` to represent models:
 
+```scheme
+(struct M (reg-map fv-map regs))
+```
+A model consists of 3 subparts: a mapping between registers and variables, a mapping between frame locations and variables, a list of available registers in the current "state" of abstract interpretation.
+
+E.g.
+
+```scheme
+(M '((x . rdi) (r . rsi)) '() R@)
+```
 
 ## Features
 
