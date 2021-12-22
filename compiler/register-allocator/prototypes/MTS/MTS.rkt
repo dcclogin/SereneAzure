@@ -1,7 +1,11 @@
 #lang racket
-;; structure (exp * ends)
+(require "utilities.rkt")
+
+
+(define op-prims '(+ - eq? < > <= >= not and or))
+;; structure for ends
 (struct Exp-Ln (exp mark) #:transparent)
-;; liveness analysis for one procedure
+
 (define mark-deaths
   (lambda (exp)
     (define cc 1)   ;; call-live flag
@@ -101,7 +105,6 @@
         [(? boolean? b) (values (Exp-Ln b '()) ds)]
         ['(void) (values (Exp-Ln exp '()) ds)]
         ['() (values '() ds)]))
-
     ;; flip the control flow
     (define (flip-cf exp)
       (match exp
@@ -119,9 +122,24 @@
            [`(while . ,ss) `(,@(flip-cf s*) ,(flip-cf s))]
            [else `(,@(flip-cf s*) ,s)])]
         ['() '()]))
- 
     (define-values (e ds) (mark (flip-cf exp) '()))
     (values (flip-cf e) ds)))
+;; liveness analysis for one function
+(define uncover-live-proc
+  (lambda (def)
+    (match def
+      [(Def f args T info* exp)
+       (let-values ([(exp@ ds) (mark-deaths exp)])
+         (let ([info@ `((live-map . ,ds) ,@info*)])
+           (Def f args T info@ exp@)))])))
+;; liveness analysis for the program
+(define uncover-live
+  (lambda (p)
+    (match p
+      [(ProgramDefs info defs)
+       (ProgramDefs info (map uncover-live-proc defs))])))
+
+
 
 (define alloc
   (lambda (proc)
@@ -129,8 +147,8 @@
     (define pe-ts
       (lambda (exp)
         (match exp
-          [`(+ ,(? fixnum? a1) ,(? fixnum? a2)) (fx+ a1 a2)]
-          [`(- ,(? fixnum? a)) (fx- 0 a)]
+          [`(+ ,(? fixnum? a1) ,(? fixnum? a2)) (+ a1 a2)]
+          [`(- ,(? fixnum? a)) (- 0 a)]
           [else #f])))
     (define ts
       (lambda (exp m ctx)
@@ -147,22 +165,29 @@
           ;; fun-ref
           [((Exp-Ln `(fun-ref ,f) die) _)
            (values (list `(fun-ref ,f)) m)]
-          ;; fun-app: load f (x6) -> shuffling call-lives -> bind args
+          ;; fun-app: shuffling call-lives -> bind args
           [((Exp-Ln `(fun-app ,f . ,args) die) `(,x . lhs))
            (define-values (m0 exp-ls0) (load m f))
-           (define m-clive (rm-d m0 die))
+           (define m-clive (rm-d m die))
            (define clives (M-reg-map m-clive))
-           (define-values (m1 exp-ls1) (shuffle-app m0 clives))
-           (define-values (m2 exp-ls2) (bindarg-app m1 args))
+           (define-values (m1 exp-ls1) (move-clives m0 clives))
+           (define smap (generate-shuffle-map m1 args))
+           (define spaths (identify-paths smap))
+           (define exp-ls2 (generate-shuffle-paths spaths))
            (values `(,@exp-ls0
                      ,@exp-ls1
-                     ,@exp-ls2 (call ,(rwt f m2))) (rm-d m2 die))]
+                     ,@exp-ls2 (call ,(rwt f m1))) (rm-d m1 die))]
           ;; fun-app tail call
           [((Exp-Ln `(fun-app ,f . ,args) die) 'tail)
            (define-values (m0 exp-ls0) (load m f))
-           (define-values (m1 exp-ls1) (bindarg-app m0 args))
+           (define smap (generate-shuffle-map m0 args))
+           (define spaths (identify-paths smap))
+           (define sloops (identify-loops smap))
+           (define exp-ls1 (generate-shuffle-paths spaths))
+           (define exp-ls2 (generate-shuffle-loops sloops))
            (values `(,@exp-ls0
-                     ,@exp-ls1 (tail-call ,(rwt f m1))) (rm-d m1 die))]
+                     ,@exp-ls1
+                     ,@exp-ls2 (tail-call ,(rwt f m0))) (rm-d m0 die))]
           ;; introduced by GC
           [((Exp-Ln `(global-value ,x) die) _)
            (values (list `(global-value ,x)) m)]
@@ -221,7 +246,10 @@
            (define-values (th* m-th) (ts th m-cnd ctx))
            (define-values (el* m-el) (ts el m-cnd ctx))
            (define-values (m* exp-ls) (shuffle m-th m-el))
-           (values `((if ,@cnd* ,th* (,@el* ,@exp-ls))) m*)]
+           (define exp@ (if (eqv? ctx 'tail)
+                            `(if ,@cnd* ,th* ,el*)
+                            `(if ,@cnd* ,th* (,@el* ,@exp-ls))))
+           (values `(,exp@) m*)]
           ;; loop
           [(`(while ,c ,e) _)
            (define-values (c* mc) (ts c m 'loop))
@@ -231,12 +259,16 @@
            (define-values (e* m*) (ts seq m ctx))
            (values `(begin . ,e*) m*)]
           [(`(,a . ,d) _)
+           #:when (not (null? d))
+           (define-values (a* ma) (ts a m 'non-tail))
+           (define-values (d* md) (ts d ma ctx))
+           (values `(,@a* . ,d*) md)]
+          [(`(,a . ,d) _)
            (define-values (a* ma) (ts a m ctx))
            (define-values (d* md) (ts d ma ctx))
            (values `(,@a* . ,d*) md)]
           [('() _) (values '() m)])))
-
-    
+    #;(trace ts)
     ;; load vars to m
     (define (load m vars)
       (match vars
@@ -273,7 +305,6 @@
          (values m2 `(,@exps1 ,@exps2))]
         ['() (values m '())]))
 
-    
     ;; save var in m
     (define (save m var)
       (match var
@@ -290,7 +321,6 @@
                       (values (M rm fvm@ rs) exps))]))]
            [else (error 'save "can't save.")])]))
 
-    
     ;; shuffling and generating moving instr
     (define shuffle
       (lambda (m1 m2)
@@ -301,18 +331,22 @@
            #:when (and (eqv? x1 x2) (not (eqv? r1 r2)))
            (values m1 (list `(set! ,r1 ,r2)))]
           [(_ _) (values m1 '())])))
+    
     ;; shuffling call-lives at fun-app position
-    (define shuffle-app
+    (define move-clives
       (lambda (m clives)
         (define exp-ls '())
         (define (shuffle! m clives)
           (match clives
             ['() m]
             [`((,x . ,r) . ,d)
+             #:when (memq r R-ee) (shuffle! m d)]
+            [`((,x . ,r) . ,d)
              (define-values (m* r*) (pick-a-reg m R-ee))
              (cond
                [r* (define i `(set! ,r* ,r)) (addto! r*)
-                   (define m@ (bind-a-reg x r* m*))
+                   (define m0 (unbind-a-reg x m*))
+                   (define m@ (bind-a-reg x r* m0))
                    (set! exp-ls (cons i exp-ls))
                    (shuffle! m@ d)]
                [else (define-values (m* exps) (save m x))
@@ -320,30 +354,107 @@
                      (set! exp-ls `(,@exps ,@exp-ls))
                      (shuffle! m@ d)])]))
         (values (shuffle! m clives) exp-ls)))
-    ;; bind arguments to calling conventions
-    (define bindarg-app
+    
+    ;; generate shuffle map for f+arguments
+    (define generate-shuffle-map
       (lambda (m args)
-        (define exp-ls '())
-        (define (bind! args convs)
+        (define map '())
+        (define (! args convs)
           (match args
             ['() 'nothing]
             [`(,a . ,d)
              (cond
                [(in-regs-var? a m)
                 => (lambda (pr)
-                     (define i `(set! ,(car convs) ,(cdr pr)))
-                     (set! exp-ls (cons i exp-ls))
-                     (bind! d (cdr convs)))]
+                     (define i `(,(cdr pr) . ,(car convs)))
+                     (set! map `(,@map ,i))
+                     (! d (cdr convs)))]
                [(in-fvs-var? a m)
                 => (lambda (pr)
-                     (define i `(set! ,(car convs) ,(cdr pr)))
-                     (set! exp-ls (cons i exp-ls))
-                     (bind! d (cdr convs)))]
-               [else (define i `(set! ,(car convs) ,a))
-                     (set! exp-ls (cons i exp-ls))
-                     (bind! d (cdr convs))])]))
-        (bind! args conventions)
-        (values m exp-ls)))
+                     (define i `(,(cdr pr) . ,(car convs)))
+                     (set! map `(,@map ,i))
+                     (! d (cdr convs)))]
+               [else (define i `(,a . ,(car convs)))
+                     (set! map `(,@map ,i))
+                     (! d (cdr convs))])]))
+        (! args conventions)
+        map))
+    
+    ;; identify paths and loops in a shuffle map
+    (define identify-paths
+      (lambda (m)
+        (define global-map m)
+        (define lhs (map car m))
+        (define rhs (map cdr m))
+        (define (expose-entrances lhs rhs)
+          (cond
+            [(null? lhs) '()]
+            [(memq (car lhs) rhs) (expose-entrances (cdr lhs) rhs)]
+            [else (cons (car lhs) (expose-entrances (cdr lhs) rhs))]))
+        (define (get-path ent)
+          (cond
+            [(assv ent global-map)
+             => (lambda (pr)
+                  (set! global-map (remove pr global-map))
+                  `(,pr . ,(get-path (cdr pr))))]
+            [else '()]))
+        (map get-path (expose-entrances lhs rhs))))
+    ;; identify-loops
+    (define identify-loops
+      (lambda (m)
+        (define (rm-trivial m)
+          (cond
+            [(null? m) m]
+            [(eqv? (caar m) (cdar m)) (rm-trivial (cdr m))]
+            [else (cons (car m) (rm-trivial (cdr m)))]))
+        (define (rm-non-loop l)
+          (cond
+            [(null? l) l]
+            [(null? (car l)) (rm-non-loop (cdr l))]
+            [(eqv? (caaar l) (cdr (last (car l))))
+             (cons (car l) (rm-non-loop (cdr l)))]
+            [else (rm-non-loop (cdr l))]))
+        (define (get-loop ent)
+          (cond
+            [(assv ent global-map)
+             => (lambda (pr)
+                  (set! global-map (remove pr global-map))
+                  `(,pr . ,(get-loop (cdr pr))))]
+            [else '()]))
+        (define global-map (rm-trivial m))
+        (define entrances (map car m))
+        (rm-non-loop (map get-loop entrances))))
+    
+    ;; generate code according to paths
+    (define generate-shuffle-paths
+      (lambda (paths)
+        (define (gen-code pr)
+          (match pr
+            [`(,x . ,r) `(set! ,r ,x)]))
+        (define (gen-code-paths paths)
+          (match paths
+            ['() '()]
+            [`(,a . ,d)
+             (let ([a* (map gen-code (reverse a))]
+                   [d* (gen-code-paths d)])
+               `(,@a* . ,d*))]))
+        (gen-code-paths paths)))
+    ;; generate code according to loops
+    (define generate-shuffle-loops
+      (lambda (loops)
+        (define (gen-code pr)
+          (match pr
+            [`(,x . ,r) `(set! ,r ,x)]))
+        (define (gen-code-loops loops)
+          (match loops
+            ['() '()]
+            [`(,a . ,d)
+             (let* ([t `(set! rax ,(cdr (last a)))]
+                    [h `(set! ,(cdr (first a)) rax)]
+                    [a* (map gen-code (reverse (cdr a)))]
+                    [d* (gen-code-loops d)])
+               `(,t ,@a* ,h . ,d*))]))
+        (gen-code-loops loops)))
 
     
     ;; select a register or victim (x . r)
@@ -474,10 +585,14 @@
       (define get-regs
         (lambda (args l)
           (match args
-            ['() '()]
+            ['() (values '() R)]
             [`(,a . ,d)
-             `((,a . ,(car l)) . ,(get-regs d (cdr l)))])))
-      (M (get-regs args conventions) '() R))
+             (define-values (rm rs) (get-regs d (cdr l)))
+             (define rm* `((,a . ,(car l)) . ,rm))
+             (define rs* (remove (car l) rs))
+             (values rm* rs*)])))
+      (define-values (rm rs) (get-regs args conventions))
+      (M rm '() rs))
     
     (match proc
       [(Def f args T info* exp)
@@ -488,8 +603,19 @@
        (let* ([stack-space (get-space-x86 offset/fv)]
               [root-spills 0]
               [params (length args)])
-         (Def f args T `((stack-space     . ,stack-space)
+         (Def f args T `((frame-variables . ,offset/fv)
                          (num-root-spills . ,root-spills)
                          (num-params      . ,params)
                          (callee-saved    . ,callee-save-used))
               exp@))])))
+
+;; alloc for the program
+(define register-allocation
+  (lambda (p)
+    (match (uncover-live p)
+      [(ProgramDefs info defs)
+       (ProgramDefs info (map alloc defs))])))
+
+
+(define (sumf fun)
+  (pretty-print (alloc (uncover-live-proc fun))))
